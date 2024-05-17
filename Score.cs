@@ -10,7 +10,6 @@ namespace RealSnakeGame
         private readonly object _lock = new object();
         public int CurrentScore;
         public int HighScore;
-        private List<(int scoreX, int scoreY)> scorePosition = new List<(int scoreX, int scoreY)>();
 
         public Score()
         {
@@ -28,7 +27,7 @@ namespace RealSnakeGame
                 {
                     Console.SetCursorPosition(scorePosition.First().scoreX, scorePosition.First().scoreY);
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.Write("Score: " + CurrentScore + " Highscore: " + HighScore);
+                    Console.Write("Score: " + CurrentScore);
                     Console.SetCursorPosition(returnPosition.scoreX, returnPosition.scoreY);
                 }
             });

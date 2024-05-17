@@ -37,6 +37,7 @@ namespace RealSnakeGame {
                 {
                     snake.Length++;
                     score.IncreaseScore(10);
+                    await score.Update();
                     fruitPosition.Clear();
                 }
                 snake.canUpdate = true;
