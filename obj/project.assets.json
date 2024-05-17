@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/jariknoop/Downloads/RealSnakeGame/RealSnakeGame/RealSnakeGame.csproj",
+      "projectUniqueName": "/Applications/XAMPP/xamppfiles/htdocs/SL2A/RealSnakeGame.csproj",
       "projectName": "RealSnakeGame",
-      "projectPath": "/Users/jariknoop/Downloads/RealSnakeGame/RealSnakeGame/RealSnakeGame.csproj",
+      "projectPath": "/Applications/XAMPP/xamppfiles/htdocs/SL2A/RealSnakeGame.csproj",
       "packagesPath": "/Users/jariknoop/.nuget/packages/",
-      "outputPath": "/Users/jariknoop/Downloads/RealSnakeGame/RealSnakeGame/obj/",
+      "outputPath": "/Applications/XAMPP/xamppfiles/htdocs/SL2A/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/jariknoop/.nuget/NuGet/NuGet.Config"
