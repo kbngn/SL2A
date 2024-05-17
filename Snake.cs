@@ -83,7 +83,7 @@ namespace RealSnakeGame {
                         if (frontPos == pos)
                         {
                             Debug("Test1");
-                            Console.WriteLine("Test1");
+                            Console.WriteLine("Botst tegen zichzelf aan");
                             Status = "Dead";
                             break;
                         }
@@ -92,7 +92,7 @@ namespace RealSnakeGame {
                         if (frontPos.x == 0 || frontPos.x == 60 || frontPos.y == 0 || frontPos.y == 20)
                         {
                             Debug("Test2");
-                            Console.WriteLine("Test2");
+                            Console.WriteLine("Botst tegen de muur aan");
                             Status = "Dead";
                             break;
                         }
