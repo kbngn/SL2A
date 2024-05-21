@@ -10,14 +10,12 @@ namespace RealSnakeGame {
             Length = 1;
         }
 
-        public async Task Draw()
+        public async Task Draw(GameSet gameSet)
         {
-            (int fruitX, int fruitY) returnPosition = Console.GetCursorPosition();
-            await Task.Run(()=>Console.SetCursorPosition(fruitPosition.First().fruitX, fruitPosition.First().fruitY));
+            gameSet.DrawPosition.Add((Position.First().x, Position.First().y, this));
             Console.BackgroundColor = Color;
             Console.Write("O");
             Console.ResetColor();
-            Console.SetCursorPosition(returnPosition.fruitX, returnPosition.fruitY);
             await Task.Delay(10);
         }
 
@@ -30,7 +28,7 @@ namespace RealSnakeGame {
                 {
                     Random rnd = new Random();
                     fruitPosition.Add((rnd.Next(1, 60), rnd.Next(1, 20)));
-                    await Draw();
+                    // await Draw();
                 }
 
                 if (fruitPosition.Contains(snake.Position.Last()))
