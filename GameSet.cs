@@ -11,12 +11,7 @@ public class GameSet
         {
             snake.Draw();
             await apple.Draw(this);
-            await score.Draw();
+            await score.Draw(this);
         }
-    }
-
-    public async Task Update(Snake snake, Apple apple, Score score, Wall wall)
-    {
-        
     }
 }

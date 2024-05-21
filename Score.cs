@@ -18,14 +18,14 @@ namespace RealSnakeGame
             scorePosition.Add((0, 25));
         }
 
-        public async Task Draw()
+        public async Task Draw(GameSet gameSet)
         {
             (int scoreX, int scoreY) returnPosition = Console.GetCursorPosition();
             await Task.Run(() =>
             {
                 lock (_lock)
                 {
-                    Console.SetCursorPosition(scorePosition.First().scoreX, scorePosition.First().scoreY);
+                    gameSet.DrawPosition.Add((Position.First().x, Position.First().y, this));
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.Write("Score: " + CurrentScore);
                     Console.SetCursorPosition(returnPosition.scoreX, returnPosition.scoreY);
@@ -44,7 +44,7 @@ namespace RealSnakeGame
                 }
             }
 
-            await Draw();
+            // await Draw();
         }
 
         public void IncreaseScore(int points)
