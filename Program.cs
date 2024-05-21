@@ -12,7 +12,7 @@ namespace RealSnakeGame {
             Apple appie = new(ConsoleColor.Red);
             Score scorie = new();
             Console.SetCursorPosition(snakey.Position.First().x, snakey.Position.First().y);
-            Task.WaitAny(snakey.Update(), appie.Update(snakey, scorie));
+            Task.WaitAny(snakey.Update(snakey), appie.Update(snakey, scorie));
         }
     }
 }

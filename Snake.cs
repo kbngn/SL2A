@@ -48,7 +48,7 @@ namespace RealSnakeGame {
             }
         }
         
-        public async Task Update() {
+        public async Task Update(Snake snake) {
             while (Status == "Alive")
             {
                 if (canUpdate)
@@ -100,7 +100,7 @@ namespace RealSnakeGame {
 
                     Console.SetCursorPosition(frontPos.x, frontPos.y); // Sets the cursor to the new position
                     Position.Add(frontPos); // Adds the front of the snake to the list of the snake positions
-                    Draw(); // Draws the front of the snake
+                    // Draw(snake); // Draws the front of the snake
                     await Task.Delay((1000 / Speed));
                 }
             }
