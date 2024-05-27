@@ -1,107 +1,76 @@
-﻿using System.Diagnostics;
-using Microsoft.VisualBasic;
-
-namespace RealSnakeGame {
+﻿namespace RealSnakeGame {
     public class Snake : Character {
-        public string Status;
+        public bool Alive, Move;
         public ConsoleKey Direction;
-        public string Head, Body;
-        public bool canUpdate = true;
-        
-        public void Debug(string message) {
-            Console.SetCursorPosition(0,30);
-            Console.WriteLine(message);
-        }
+        public int MovementMultiplier;
+        public (int x, int y) Heading;
 
         public Snake(int x, int y, ConsoleColor color) {
             Position.Add((x, y)); //Voegt de meegegeven positie toe als startpositie
             Length = 1; //Standaard startlengte
-            Speed = 10; //Standaard snelheid
+            Speed = 8; //Standaard snelheid
             Color = color;
-            Status = "Alive";
+            Alive = true;
             Direction = ConsoleKey.RightArrow; //Beweegt standaard naar rechts
-            Head = ":";
-            Body = " ";
+            MovementMultiplier = 1000 / Speed;
         }
 
-        public void Draw() {  
-            Console.BackgroundColor = ConsoleColor.Black; // Reset the color to default
-            if(Position.Count() > Length){ // If the Position is longer then the max Length of the snake, remove the back
-                Console.SetCursorPosition(Position.First().x, Position.First().y); // Sets the position to the back of the snake
-                Console.Write(" "); // Remove the last part of the snake
-                Position.Remove(Position.First());
-                Console.SetCursorPosition(Position.Last().x, Position.Last().y);
-            }
-            Console.BackgroundColor = Color; // Sets the background color to green
-            Console.ForegroundColor = ConsoleColor.White;
-            foreach ((int x, int y)pos in Position)
-            {
-                Console.SetCursorPosition(pos.x, pos.y);
-                if (pos == Position.Last())
-                {
-                    Console.Write(Head);
-                }
-                else
-                {
-                    Console.Write(Body);
-                }
+        public void CheckCollision(Wall wall) {
+            if(Heading.x == wall.Width || Heading.x == 0 || Heading.y == wall.Height || Heading.y == 0 || Position.Contains(Heading)) {
+                Alive = false;
+                Move = false;
             }
         }
-        
-        public async Task Update(Snake snake) {
-            while (Status == "Alive")
-            {
-                if (canUpdate)
-                {
-                    (int x, int y) frontPos = Position.Last();
-                    (int x, int y) backPos = Position.First();
-                    if (Console.KeyAvailable)
-                    {
-                        Direction = Console.ReadKey(true).Key;
-                    }
 
-                    switch (Direction)
-                    {
-                        case ConsoleKey.RightArrow:
-                            frontPos.x++;
-                            break;
+        public void Update(Wall wall, GameSet gameSet) {
+            if(Alive && Move) {
+                Heading = Position.Last();
+                MovementMultiplier = 1000/Speed;
+
+                if(Console.KeyAvailable) {
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    switch(key) { //Switch statement prevents movement in the opposite direction to prevent suicide
                         case ConsoleKey.LeftArrow:
-                            frontPos.x--;
+                            if(Direction != ConsoleKey.RightArrow) { Direction = key; };
                             break;
-                        case ConsoleKey.DownArrow:
-                            frontPos.y++;
-                            await Task.Delay(1000 / (Speed * 2));
+                        case ConsoleKey.RightArrow:
+                            if(Direction != ConsoleKey.LeftArrow) { Direction = key; };
                             break;
                         case ConsoleKey.UpArrow:
-                            frontPos.y--;
-                            await Task.Delay(1000 / (Speed * 2));
+                            if(Direction != ConsoleKey.DownArrow) { Direction = key; };
+                            break;
+                        case ConsoleKey.DownArrow:
+                            if(Direction != ConsoleKey.UpArrow) { Direction = key; };
                             break;
                     }
+                }
 
-                    foreach ((int x, int y) pos in Position)
-                    {
-                        if (frontPos == pos)
-                        {
-                            Debug("Test1");
-                            Console.WriteLine("Botst tegen zichzelf aan");
-                            Status = "Dead";
-                            break;
-                        }
+                switch(Direction) {
+                    case ConsoleKey.RightArrow:
+                        Heading.x++;
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        Heading.x--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        Heading.y++;
+                        MovementMultiplier *= 2;
+                        break;
+                    case ConsoleKey.UpArrow:
+                        Heading.y--;
+                        MovementMultiplier *= 2;
+                        break;
+                }
 
-                        // Check of de slang tegen de muur aan botst
-                        if (frontPos.x == 0 || frontPos.x == 60 || frontPos.y == 0 || frontPos.y == 20)
-                        {
-                            Debug("Test2");
-                            Console.WriteLine("Botst tegen de muur aan");
-                            Status = "Dead";
-                            break;
-                        }
-                    }
-
-                    Console.SetCursorPosition(frontPos.x, frontPos.y); // Sets the cursor to the new position
-                    Position.Add(frontPos); // Adds the front of the snake to the list of the snake positions
-                    // Draw(snake); // Draws the front of the snake
-                    await Task.Delay((1000 / Speed));
+                CheckCollision(wall); //Check for collision
+                Position.Add(Heading); // Adds the front of the snake to the list of the snake positions
+                if(Position.Count > Length + 1) {
+                    Console.SetCursorPosition(Position.First().x, Position.First().y);
+                    Console.Write(" ");
+                    Position.Remove(Position.First()); //Remove oldest element (Tail end) from position list
+                }
+                foreach(var (x, y) in Position) {
+                    gameSet.DrawPositions.Add((x, y, this));
                 }
             }
         }

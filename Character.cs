@@ -3,7 +3,9 @@
         public List<(int x, int y)> Position = [];
         public int Length, Speed;
         public ConsoleColor Color;
-        public List<(int fruitX, int fruitY)> fruitPosition = [];
-        public List<(int scoreX, int scoreY)> scorePosition = [];
+
+        public void Draw(){
+            Console.Write(" "); //Very simple drawing method ;)
+        }
     }
 }
