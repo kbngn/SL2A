@@ -4,7 +4,7 @@
         public int Length, Speed;
         public ConsoleColor Color;
 
-        public void Draw(){
+        public static void Draw(){
             Console.Write(" "); //Very simple drawing method ;)
         }
     }

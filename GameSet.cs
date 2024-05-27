@@ -7,21 +7,25 @@ namespace RealSnakeGame {
         public Score Score;
         public Wall Wall;
 
-        public GameSet(Snake snake, Apple apple, Score score, Wall wall) {
-            Snake = snake;
-            Apple = apple;
-            Score = score;
-            Wall = wall;
+        public GameSet() { //Assign friends to play with and draw the walls
+            Wall = new(60, 20);
+            Snake = new(Wall.Width/2, Wall.Height/2, ConsoleColor.DarkGreen);
+            Apple = new(ConsoleColor.Red);
+            Score = new();
+            Wall.Draw();
         }
 
         public void Setup() {
-            if(Snake.Position.Count > 1 || Apple.Position.Count != 0 || Score.CurrentScore != 0) {
+            if(Snake.Position.Count > 1 || Apple.Position.Count > 0 || Score.CurrentScore > 0) {
                 //Reset Game
                 Snake.Position.Clear(); //Clear lists of all positions
                 Apple.Position.Clear(); //Same with apples
+                DrawPositions.Clear(); //Clears all the drawing positions~~
                 Score.CurrentScore = 0; //Resets only the current score
                 Snake.Position.Add((Wall.Width/2, Wall.Height/2)); //Sets snake position to middle (default start)
+                Snake.Direction = ConsoleKey.RightArrow; //Default snake direction
                 Snake.Speed = 8; //Default snake speed
+                Snake.Length = 1; //Default snake length
             }
             Console.Clear(); //Clears console
             Wall.Draw();
@@ -32,8 +36,8 @@ namespace RealSnakeGame {
         public void RunGame() {
             while(Paused == false) {
                 Task.WaitAny(
-                    Draw(Snake, Apple, Score),
-                    Update(Snake, Apple, Score, Wall),
+                    DrawAll(),
+                    UpdateAll(),
                     Task.Delay(Snake.MovementMultiplier)
                 );
                 //PauseGame();
@@ -80,37 +84,36 @@ namespace RealSnakeGame {
             }
         }
 
-        public async Task Draw(Snake snake, Apple apple, Score score) {
+        public async Task DrawAll() {
             foreach(var (x, y, o) in DrawPositions) {
                 Console.SetCursorPosition(x, y);
-                if(o == snake && snake.Alive) {
-                    Console.BackgroundColor = snake.Color;
-                    snake.Draw();
+                if(o == Snake && Snake.Alive) {
+                    Console.BackgroundColor = Snake.Color;
+                    Snake.Draw();
                 }
-                if(o == apple) {
-                    snake.Move = false;
-                    Console.BackgroundColor = apple.Color;
-                    apple.Draw();
+                if(o == Apple) {
+                    Console.BackgroundColor = Apple.Color;
+                    Apple.Draw();
                 }
-                if(o == score) {
-                    snake.Move = false;
+                if(o == Score) {
+                    Snake.Move = false;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.BackgroundColor = score.Color;
-                    score.DrawScore();
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Score.Draw();
                 }
             }
             DrawPositions.Clear();
             Console.BackgroundColor = default;
             Console.ForegroundColor = default;
-            snake.Move = true;
-            await Task.Delay(snake.MovementMultiplier / 2);
+            Snake.Move = true;
+            await Task.Delay(Snake.MovementMultiplier / 2);
         }
 
-        public async Task Update(Snake snake, Apple apple, Score score, Wall wall) {
-            snake.Update(wall, this);
-            apple.Update(snake, score, this);
-            score.Update(this);
-            await Task.Delay(snake.MovementMultiplier / 2);
+        public async Task UpdateAll() {
+            Snake.Update(Wall, this);
+            Apple.Update(this);
+            Score.Update(this);
+            await Task.Delay(Snake.MovementMultiplier / 2);
         }
     }
 }
