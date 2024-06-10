@@ -80,6 +80,7 @@ namespace RealSnakeGame {
                 Setup();
             }
             else if(Key == ConsoleKey.N){
+                Console.Write("\n Thank you for playing!");
                 Environment.Exit(0);
             }
         }
