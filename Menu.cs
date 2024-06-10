@@ -1,7 +1,8 @@
 ﻿namespace RealSnakeGame;
 
-public class Menu
+public class Menu : Score
 {
+    private Score score = new Score();
     public void ShowMenu()
     {
         while (true)
@@ -26,7 +27,6 @@ public class Menu
                     break;
                 case "2":
                     // View high scores
-                    // You'll need to implement this method
                     ViewHighScores();
                     break;
                 case "3":
@@ -42,6 +42,10 @@ public class Menu
 
     private void ViewHighScores()
     {
-        // Implement your high scores viewing logic here
+        Console.Clear();
+        score.DrawHighScoreWithDate();
+        Console.WriteLine("\nPress any key to return to the menu...");
+        Console.ReadKey();
+        Console.Clear();
     }
 }
