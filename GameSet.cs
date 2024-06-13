@@ -7,11 +7,11 @@ namespace RealSnakeGame {
         public Score Score;
         public Wall Wall;
 
-        public GameSet() { //Assign friends to play with and draw the walls
+        public GameSet(Score score) {
+            this.Score = score;
             Wall = new(60, 20);
             Snake = new(Wall.Width/2, Wall.Height/2, ConsoleColor.DarkGreen);
             Apple = new(ConsoleColor.Red);
-            Score = new();
             Wall.Draw();
         }
 
@@ -61,7 +61,8 @@ namespace RealSnakeGame {
             }
         }
 
-        public void GameOver() {
+        public void GameOver()
+        {
             string gameOverText = "YOU DIED";
             string continueText = "CONTINUE? Y/N";
             Console.SetCursorPosition((Wall.Width / 2 - (gameOverText.Length / 2)), Wall.Height / 2 - 1);
@@ -69,6 +70,13 @@ namespace RealSnakeGame {
             Console.Write(gameOverText);
             Console.SetCursorPosition((Wall.Width / 2 - (continueText.Length / 2)), Wall.Height / 2); // New line so walls dont break on writing line
             Console.Write(continueText);
+            if (Score.NewHighScoreAchieved)
+            {
+                Console.Write("\nCongratulations! You've achieved a new high score. Please enter your name: \n");
+                Score.PlayerName = Console.ReadLine();
+                Score.SaveHighScore();
+                Score.NewHighScoreAchieved = false;
+            }
             if(Console.KeyAvailable) {
                 ConsoleKey Key = Console.ReadKey(true).Key;
                 Reset(Key);
@@ -80,7 +88,7 @@ namespace RealSnakeGame {
                 Setup();
             }
             else if(Key == ConsoleKey.N){
-                Console.Write("\n Thank you for playing!");
+                Console.Write("\nThank you for playing!");
                 Environment.Exit(0);
             }
         }
