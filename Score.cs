@@ -9,8 +9,10 @@ namespace RealSnakeGame
     {
         public int CurrentScore;
         public int HighScore;
-        public DateTime HighScoreTime; // Added this line
+        public DateTime HighScoreTime; // Added this 22line
         public List<(int x, int y)> Position = new List<(int x, int y)>();
+        public List<string> PlayerNames = new List<string>();
+        public bool NewHighScoreAchieved;
 
         private const string HighScoreFilePath = "highscore.txt";
 
@@ -37,8 +39,8 @@ namespace RealSnakeGame
             if (CurrentScore > HighScore)
             {
                 HighScore = CurrentScore;
-                HighScoreTime = DateTime.Now; // Added this line
-                SaveHighScore();
+                HighScoreTime = DateTime.Now;
+                NewHighScoreAchieved = true;
             }
         }
 
@@ -48,7 +50,7 @@ namespace RealSnakeGame
             snake.Speed++; // Snake speed increases based on score increases. This gets real hard real fast.
         }
 
-        private Tuple<int, DateTime> LoadHighScore() // Modified this method
+        private Tuple<int, DateTime, string> LoadHighScore()
         {
             if (File.Exists(HighScoreFilePath))
             {
@@ -57,23 +59,27 @@ namespace RealSnakeGame
                     string[] scoreData = File.ReadAllLines(HighScoreFilePath);
                     int score = int.Parse(scoreData[0]);
                     DateTime time = DateTime.Parse(scoreData[1]);
-                    return Tuple.Create(score, time);
+                    string name = scoreData[2];
+                    PlayerNames.Add(name); // Add the player name to the PlayerNames list
+                    return Tuple.Create(score, time, name);
                 }
                 catch
                 {
                     // Handle any errors that might occur during reading/parsing
-                    return Tuple.Create(0, DateTime.MinValue);
+                    return Tuple.Create(0, DateTime.MinValue, string.Empty);
                 }
             }
-            return Tuple.Create(0, DateTime.MinValue);
+            return Tuple.Create(0, DateTime.MinValue, string.Empty);
         }
-
-        private void SaveHighScore() // Modified this method
+        public void SaveHighScore()
         {
             try
             {
-                string[] scoreData = { HighScore.ToString(), HighScoreTime.ToString() };
-                File.WriteAllLines(HighScoreFilePath, scoreData);
+                foreach (var playerName in PlayerNames)
+                {
+                    string[] scoreData = { HighScore.ToString(), HighScoreTime.ToString(), playerName };
+                    File.WriteAllLines(HighScoreFilePath, scoreData);
+                }
             }
             catch
             {
@@ -83,9 +89,16 @@ namespace RealSnakeGame
         }
         public void DrawHighScoreWithDate()
         {
-            Console.SetCursorPosition(Position.First().x, Position.First().y);
-            DateTime highScoreTimeWithoutSeconds = HighScoreTime.AddSeconds(-HighScoreTime.Second);
-            Console.Write("High Score: " + HighScore + " achieved at " + highScoreTimeWithoutSeconds);
+            if (PlayerNames.Any()) // Check if the list is not empty
+            {
+                Console.SetCursorPosition(Position.First().x, Position.First().y);
+                DateTime highScoreTimeWithoutSeconds = HighScoreTime.AddSeconds(-HighScoreTime.Second);
+                Console.Write("High Score: " + HighScore + " achieved by " + PlayerNames.Last() + " at " + highScoreTimeWithoutSeconds);
+            }
+            else
+            {
+                Console.WriteLine("No highscores available yet.");
+            }
         }
     }
 }

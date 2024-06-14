@@ -3,9 +3,10 @@
         static void Main() {
             Console.CursorVisible = false;
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Menu menu = new Menu();
+            Score score = new Score();
+            Menu menu = new Menu(score);
             menu.ShowMenu();
-            GameSet gameSet = new();
+            GameSet gameSet = new(score);
             gameSet.RunGame();
         }
     }

@@ -2,7 +2,12 @@
 
 public class Menu : Score
 {
-    private Score score = new Score();
+    private Score score;
+
+    public Menu(Score score)
+    {
+        this.score = score;
+    }
     public void ShowMenu()
     {
         while (true)
@@ -22,7 +27,7 @@ public class Menu : Score
                     Console.Clear();
 
                     // Start the game
-                    GameSet gameSet = new GameSet();
+                    GameSet gameSet = new GameSet(score);
                     gameSet.RunGame();
                     break;
                 case "2":
