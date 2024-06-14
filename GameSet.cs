@@ -40,7 +40,7 @@ namespace RealSnakeGame {
                     UpdateAll(),
                     Task.Delay(Snake.MovementMultiplier)
                 );
-                //PauseGame();
+                // PauseGame();
                 if(!Snake.Alive) {
                     GameOver();
                 }
