@@ -73,7 +73,8 @@ namespace RealSnakeGame {
             if (Score.NewHighScoreAchieved)
             {
                 Console.Write("\nCongratulations! You've achieved a new high score. Please enter your name: \n");
-                Score.PlayerName = Console.ReadLine();
+                string playerName = Console.ReadLine();
+                Score.PlayerNames.Add(playerName);
                 Score.SaveHighScore();
                 Score.NewHighScoreAchieved = false;
             }

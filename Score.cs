@@ -9,9 +9,9 @@ namespace RealSnakeGame
     {
         public int CurrentScore;
         public int HighScore;
-        public DateTime HighScoreTime; // Added this line
+        public DateTime HighScoreTime; // Added this 22line
         public List<(int x, int y)> Position = new List<(int x, int y)>();
-        public string PlayerName;
+        public List<string> PlayerNames = new List<string>();
         public bool NewHighScoreAchieved;
 
         private const string HighScoreFilePath = "highscore.txt";
@@ -60,6 +60,7 @@ namespace RealSnakeGame
                     int score = int.Parse(scoreData[0]);
                     DateTime time = DateTime.Parse(scoreData[1]);
                     string name = scoreData[2];
+                    PlayerNames.Add(name); // Add the player name to the PlayerNames list
                     return Tuple.Create(score, time, name);
                 }
                 catch
@@ -74,8 +75,11 @@ namespace RealSnakeGame
         {
             try
             {
-                string[] scoreData = { HighScore.ToString(), HighScoreTime.ToString(), PlayerName };
-                File.WriteAllLines(HighScoreFilePath, scoreData);
+                foreach (var playerName in PlayerNames)
+                {
+                    string[] scoreData = { HighScore.ToString(), HighScoreTime.ToString(), playerName };
+                    File.WriteAllLines(HighScoreFilePath, scoreData);
+                }
             }
             catch
             {
@@ -85,9 +89,16 @@ namespace RealSnakeGame
         }
         public void DrawHighScoreWithDate()
         {
-            Console.SetCursorPosition(Position.First().x, Position.First().y);
-            DateTime highScoreTimeWithoutSeconds = HighScoreTime.AddSeconds(-HighScoreTime.Second);
-            Console.Write("High Score: " + HighScore + " achieved by " + PlayerName + " at " + highScoreTimeWithoutSeconds);
+            if (PlayerNames.Any()) // Check if the list is not empty
+            {
+                Console.SetCursorPosition(Position.First().x, Position.First().y);
+                DateTime highScoreTimeWithoutSeconds = HighScoreTime.AddSeconds(-HighScoreTime.Second);
+                Console.Write("High Score: " + HighScore + " achieved by " + PlayerNames.Last() + " at " + highScoreTimeWithoutSeconds);
+            }
+            else
+            {
+                Console.WriteLine("No highscores available yet.");
+            }
         }
     }
 }
